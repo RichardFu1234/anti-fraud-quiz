@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>反詐騙小知識測驗</title>
+  <style>
+    body {
+      font-family: "微軟正黑體", sans-serif;
+      padding: 20px;
+      background-color: #f8f9fa;
+    }
+    h1 {
+      color: #d63384;
+    }
+    .question {
+      margin-bottom: 20px;
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
+    .result {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    button {
+      margin-top: 10px;
+      background-color: #198754;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #157347;
+    }
+    #finalResult {
+      font-size: 1.2em;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>反詐騙小知識測驗</h1>
+
+  <div class="question" id="q1">
+    <p>問題 1：收到「恭喜中獎，請點此連結領取獎品」，你該怎麼做？</p>
+    <button onclick="checkAnswer(1, false)">點進去看看</button>
+    <button onclick="checkAnswer(1, true)">忽略它，可能是詐騙</button>
+    <div class="result" id="r1"></div>
+  </div>
+
+  <div class="question" id="q2" style="display:none;">
+    <p>問題 2：有人自稱是銀行職員打電話來，要你提供驗證碼，你應該？</p>
+    <button onclick="checkAnswer(2, false)">提供驗證碼</button>
+    <button onclick="checkAnswer(2, true)">拒絕並掛電話</button>
+    <div class="result" id="r2"></div>
+  </div>
+
+  <div class="question" id="q3" style="display:none;">
+    <p>問題 3：收到陌生人要求轉帳，你該怎麼辦？</p>
+    <button onclick="checkAnswer(3, false)">照做轉帳</button>
+    <button onclick="checkAnswer(3, true)">先確認對方身分再決定</button>
+    <div class="result" id="r3"></div>
+  </div>
+
+  <div class="question" id="q4" style="display:none;">
+    <p>問題 4：收到奇怪的簡訊要求點擊連結，你？</p>
+    <button onclick="checkAnswer(4, false)">點擊連結查看內容</button>
+    <button onclick="checkAnswer(4, true)">刪除簡訊不理會</button>
+    <div class="result" id="r4"></div>
+  </div>
+
+  <div class="question" id="q5" style="display:none;">
+    <p>問題 5：遇到有人要求先支付保證金才能領獎品，你？</p>
+    <button onclick="checkAnswer(5, false)">先支付保證金</button>
+    <button onclick="checkAnswer(5, true)">懷疑詐騙，不支付</button>
+    <div class="result" id="r5"></div>
+  </div>
+
+  <div class="question" id="q6" style="display:none;">
+    <p>問題 6：收到看似官方的郵件要求更新個人資料，你？</p>
+    <button onclick="checkAnswer(6, false)">點擊郵件連結更新資料</button>
+    <button onclick="checkAnswer(6, true)">直接進官方網站查詢再操作</button>
+    <div class="result" id="r6"></div>
+  </div>
+
+  <div class="question" id="q7" style="display:none;">
+    <p>問題 7：陌生人要求你提供銀行帳號或密碼，你？</p>
+    <button onclick="checkAnswer(7, false)">提供資料</button>
+    <button onclick="checkAnswer(7, true)">拒絕並掛電話</button>
+    <div class="result" id="r7"></div>
+  </div>
+
+  <div class="question" id="q8" style="display:none;">
+    <p>問題 8：遇到可疑的理財投資訊息時，你？</p>
+    <button onclick="checkAnswer(8, false)">立即投資</button>
+    <button onclick="checkAnswer(8, true)">多方查證不輕信</button>
+    <div class="result" id="r8"></div>
+  </div>
+
+  <div class="question" id="q9" style="display:none;">
+    <p>問題 9：網路上有陌生人傳送檔案給你，你？</p>
+    <button onclick="checkAnswer(9, false)">馬上打開檔案</button>
+    <button onclick="checkAnswer(9, true)">先確認對方再打開</button>
+    <div class="result" id="r9"></div>
+  </div>
+
+  <div class="question" id="q10" style="display:none;">
+    <p>問題 10：有人說你欠錢並威脅你，你？</p>
+    <button onclick="checkAnswer(10, false)">慌張付款</button>
+    <button onclick="checkAnswer(10, true)">報警並求助</button>
+    <div class="result" id="r10"></div>
+  </div>
+
+  <div id="finalResult"></div>
+  <button id="restartBtn" style="display:none;" onclick="restartQuiz()">重新開始測驗</button>
+
+  <script>
+    let currentQuestion = 1;
+    let score = 0;
+
+    function checkAnswer(questionNumber, isCorrect) {
+      const result = document.getElementById("r" + questionNumber);
+      if (isCorrect) {
+        result.innerText = "答對了！妳很警覺唷 ♡";
+        result.style.color = "#198754";
+        score += 10;
+      } else {
+        result.innerText = "答錯了…這可能是詐騙，要多留意！";
+        result.style.color = "#dc3545";
+      }
+
+      // 禁用按鈕，防止重複點擊
+      const buttons = document.querySelectorAll(`#q${questionNumber} button`);
+      buttons.forEach(btn => btn.disabled = true);
+
+      // 顯示下一題或結果
+      if (currentQuestion < 10) {
+        document.getElementById("q" + currentQuestion).style.display = "none";
+        currentQuestion++;
+        document.getElementById("q" + currentQuestion).style.display = "block";
+      } else {
+        showFinalResult();
+      }
+    }
+
+    function showFinalResult() {
+      document.getElementById("finalResult").innerText = "測驗結束！你的總分是：" + score + " 分 / 100 分";
+      document.getElementById("finalResult").style.color = "#d63384";
+      document.getElementById("restartBtn").style.display = "inline-block";
+    }
+
+    function restartQuiz() {
+      score = 0;
+      currentQuestion = 1;
+      document.getElementById("finalResult").innerText = "";
+      document.getElementById("restartBtn").style.display = "none";
+
+      for(let i=1; i<=10; i++) {
+        document.getElementById("q"+i).style.display = (i === 1) ? "block" : "none";
+        document.getElementById("r"+i).innerText = "";
+        const buttons = document.querySelectorAll(`#q${i} button`);
+        buttons.forEach(btn => btn.disabled = false);
+      }
+    }
+  </script>
+</body>
+</html>
