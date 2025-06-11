@@ -4,124 +4,271 @@
   <meta charset="UTF-8" />
   <title>反詐騙小知識測驗</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap');
+
     body {
-      font-family: "微軟正黑體", sans-serif;
-      padding: 20px;
-      background-color: #f8f9fa;
+      font-family: 'Noto Sans TC', '微軟正黑體', sans-serif;
+      padding: 30px 20px;
+      background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
     }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background: #ffffffdd;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(214, 67, 151, 0.3);
+      padding: 30px 40px;
+      backdrop-filter: blur(10px);
+    }
+
     h1 {
-      color: #d63384;
+      color: #c2185b;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 25px;
+      text-shadow: 0 2px 5px #f8bbd0cc;
     }
-    .question {
-      margin-bottom: 20px;
-      background-color: #fff;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #ccc;
+
+    label {
+      display: block;
+      margin-bottom: 12px;
+      font-weight: 600;
+      color: #880e4f;
+      font-size: 1.1em;
     }
-    .result {
-      font-weight: bold;
-      margin-top: 10px;
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 1.1em;
+      border-radius: 12px;
+      border: 2px solid #f48fb1;
+      outline: none;
+      transition: border-color 0.3s ease;
     }
+
+    input[type="text"]:focus {
+      border-color: #ad1457;
+      box-shadow: 0 0 8px #ad1457aa;
+    }
+
     button {
-      margin-top: 10px;
-      background-color: #198754;
-      color: white;
+      background: linear-gradient(45deg, #d81b60, #f48fb1);
+      color: #fff;
       border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
+      padding: 12px 25px;
+      border-radius: 25px;
+      font-size: 1.1em;
+      font-weight: 600;
       cursor: pointer;
+      box-shadow: 0 4px 12px rgba(216, 27, 96, 0.5);
+      transition: background 0.4s ease, transform 0.2s ease;
+      margin-top: 10px;
+      user-select: none;
     }
+
     button:hover {
-      background-color: #157347;
+      background: linear-gradient(45deg, #f48fb1, #d81b60);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(244, 143, 177, 0.7);
     }
+
+    button:disabled {
+      background: #f8bbd0;
+      box-shadow: none;
+      cursor: not-allowed;
+      transform: none;
+      color: #bbb;
+    }
+
+    .login-section, .quiz-section {
+      margin-top: 10px;
+    }
+
+    .question {
+      background: #fff0f6;
+      border-radius: 15px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px #f48fb18a;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .question:hover {
+      box-shadow: 0 6px 25px #d81b608a;
+    }
+
+    .question p {
+      font-size: 1.15em;
+      font-weight: 600;
+      color: #880e4f;
+      margin-bottom: 15px;
+    }
+
+    .result {
+      margin-top: 12px;
+      font-weight: 700;
+      font-size: 1.05em;
+      user-select: none;
+    }
+
     #finalResult {
+      font-size: 1.4em;
+      margin-top: 25px;
+      font-weight: 700;
+      color: #ad1457;
+      text-align: center;
+      text-shadow: 0 1px 5px #f8bbd0cc;
+      user-select: none;
+    }
+
+    #welcomeUser {
+      margin-bottom: 25px;
       font-size: 1.2em;
+      color: #880e4f;
+      font-weight: 600;
+      text-align: center;
+      user-select: none;
+    }
+
+    #restartBtn, #logoutBtn {
       margin-top: 20px;
-      font-weight: bold;
+    }
+
+    #logoutBtn {
+      background: #c2185b;
+      box-shadow: 0 4px 12px rgba(194, 24, 91, 0.6);
+    }
+
+    #logoutBtn:hover {
+      background: #880e4f;
+      box-shadow: 0 8px 20px rgba(136, 14, 79, 0.7);
+    }
+
+    #loginError {
+      margin-top: 15px;
+      font-weight: 700;
+      font-size: 1em;
+      color: #b00020;
+      text-align: center;
+      user-select: none;
     }
   </style>
 </head>
 <body>
-  <h1>反詐騙小知識測驗</h1>
+  <div class="container">
 
-  <div class="question" id="q1">
-    <p>問題 1：收到「恭喜中獎，請點此連結領取獎品」，你該怎麼做？</p>
-    <button onclick="checkAnswer(1, false)">點進去看看</button>
-    <button onclick="checkAnswer(1, true)">忽略它，可能是詐騙</button>
-    <div class="result" id="r1"></div>
+    <!-- 登入區 -->
+    <div class="login-section" id="loginSection">
+      <h1>反詐騙小知識測驗 - 登入</h1>
+      <label for="usernameInput">請輸入你的名稱：</label>
+      <input type="text" id="usernameInput" placeholder="例如：小明" />
+      <button onclick="login()">登入</button>
+      <div id="loginError"></div>
+    </div>
+
+    <!-- 測驗區 -->
+    <div class="quiz-section" id="quizSection" style="display:none;">
+      <h1>反詐騙小知識測驗</h1>
+      <div id="welcomeUser"></div>
+
+      <!-- 問題們 -->
+      <div class="question" id="q1">
+        <p>問題 1：收到「恭喜中獎，請點此連結領取獎品」，你該怎麼做？</p>
+        <button onclick="checkAnswer(1, false)">點進去看看</button>
+        <button onclick="checkAnswer(1, true)">忽略它，可能是詐騙</button>
+        <div class="result" id="r1"></div>
+      </div>
+      <div class="question" id="q2" style="display:none;">
+        <p>問題 2：有人自稱是銀行職員打電話來，要你提供驗證碼，你應該？</p>
+        <button onclick="checkAnswer(2, false)">提供驗證碼</button>
+        <button onclick="checkAnswer(2, true)">拒絕並掛電話</button>
+        <div class="result" id="r2"></div>
+      </div>
+      <div class="question" id="q3" style="display:none;">
+        <p>問題 3：收到陌生人要求轉帳，你該怎麼辦？</p>
+        <button onclick="checkAnswer(3, false)">照做轉帳</button>
+        <button onclick="checkAnswer(3, true)">先確認對方身分再決定</button>
+        <div class="result" id="r3"></div>
+      </div>
+      <div class="question" id="q4" style="display:none;">
+        <p>問題 4：收到奇怪的簡訊要求點擊連結，你？</p>
+        <button onclick="checkAnswer(4, false)">點擊連結查看內容</button>
+        <button onclick="checkAnswer(4, true)">刪除簡訊不理會</button>
+        <div class="result" id="r4"></div>
+      </div>
+      <div class="question" id="q5" style="display:none;">
+        <p>問題 5：遇到有人要求先支付保證金才能領獎品，你？</p>
+        <button onclick="checkAnswer(5, false)">先支付保證金</button>
+        <button onclick="checkAnswer(5, true)">懷疑詐騙，不支付</button>
+        <div class="result" id="r5"></div>
+      </div>
+      <div class="question" id="q6" style="display:none;">
+        <p>問題 6：收到看似官方的郵件要求更新個人資料，你？</p>
+        <button onclick="checkAnswer(6, false)">點擊郵件連結更新資料</button>
+        <button onclick="checkAnswer(6, true)">直接進官方網站查詢再操作</button>
+        <div class="result" id="r6"></div>
+      </div>
+      <div class="question" id="q7" style="display:none;">
+        <p>問題 7：陌生人要求你提供銀行帳號或密碼，你？</p>
+        <button onclick="checkAnswer(7, false)">提供資料</button>
+        <button onclick="checkAnswer(7, true)">拒絕並掛電話</button>
+        <div class="result" id="r7"></div>
+      </div>
+      <div class="question" id="q8" style="display:none;">
+        <p>問題 8：遇到可疑的理財投資訊息時，你？</p>
+        <button onclick="checkAnswer(8, false)">立即投資</button>
+        <button onclick="checkAnswer(8, true)">多方查證不輕信</button>
+        <div class="result" id="r8"></div>
+      </div>
+      <div class="question" id="q9" style="display:none;">
+        <p>問題 9：網路上有陌生人傳送檔案給你，你？</p>
+        <button onclick="checkAnswer(9, false)">馬上打開檔案</button>
+        <button onclick="checkAnswer(9, true)">先確認對方再打開</button>
+        <div class="result" id="r9"></div>
+      </div>
+      <div class="question" id="q10" style="display:none;">
+        <p>問題 10：有人說你欠錢並威脅你，你？</p>
+        <button onclick="checkAnswer(10, false)">慌張付款</button>
+        <button onclick="checkAnswer(10, true)">報警並求助</button>
+        <div class="result" id="r10"></div>
+      </div>
+
+      <div id="finalResult"></div>
+      <div style="text-align:center;">
+        <button id="restartBtn" style="display:none;" onclick="restartQuiz()">重新開始測驗</button>
+        <button id="logoutBtn" style="display:none; margin-left: 15px;" onclick="logout()">登出</button>
+      </div>
+    </div>
   </div>
-
-  <div class="question" id="q2" style="display:none;">
-    <p>問題 2：有人自稱是銀行職員打電話來，要你提供驗證碼，你應該？</p>
-    <button onclick="checkAnswer(2, false)">提供驗證碼</button>
-    <button onclick="checkAnswer(2, true)">拒絕並掛電話</button>
-    <div class="result" id="r2"></div>
-  </div>
-
-  <div class="question" id="q3" style="display:none;">
-    <p>問題 3：收到陌生人要求轉帳，你該怎麼辦？</p>
-    <button onclick="checkAnswer(3, false)">照做轉帳</button>
-    <button onclick="checkAnswer(3, true)">先確認對方身分再決定</button>
-    <div class="result" id="r3"></div>
-  </div>
-
-  <div class="question" id="q4" style="display:none;">
-    <p>問題 4：收到奇怪的簡訊要求點擊連結，你？</p>
-    <button onclick="checkAnswer(4, false)">點擊連結查看內容</button>
-    <button onclick="checkAnswer(4, true)">刪除簡訊不理會</button>
-    <div class="result" id="r4"></div>
-  </div>
-
-  <div class="question" id="q5" style="display:none;">
-    <p>問題 5：遇到有人要求先支付保證金才能領獎品，你？</p>
-    <button onclick="checkAnswer(5, false)">先支付保證金</button>
-    <button onclick="checkAnswer(5, true)">懷疑詐騙，不支付</button>
-    <div class="result" id="r5"></div>
-  </div>
-
-  <div class="question" id="q6" style="display:none;">
-    <p>問題 6：收到看似官方的郵件要求更新個人資料，你？</p>
-    <button onclick="checkAnswer(6, false)">點擊郵件連結更新資料</button>
-    <button onclick="checkAnswer(6, true)">直接進官方網站查詢再操作</button>
-    <div class="result" id="r6"></div>
-  </div>
-
-  <div class="question" id="q7" style="display:none;">
-    <p>問題 7：陌生人要求你提供銀行帳號或密碼，你？</p>
-    <button onclick="checkAnswer(7, false)">提供資料</button>
-    <button onclick="checkAnswer(7, true)">拒絕並掛電話</button>
-    <div class="result" id="r7"></div>
-  </div>
-
-  <div class="question" id="q8" style="display:none;">
-    <p>問題 8：遇到可疑的理財投資訊息時，你？</p>
-    <button onclick="checkAnswer(8, false)">立即投資</button>
-    <button onclick="checkAnswer(8, true)">多方查證不輕信</button>
-    <div class="result" id="r8"></div>
-  </div>
-
-  <div class="question" id="q9" style="display:none;">
-    <p>問題 9：網路上有陌生人傳送檔案給你，你？</p>
-    <button onclick="checkAnswer(9, false)">馬上打開檔案</button>
-    <button onclick="checkAnswer(9, true)">先確認對方再打開</button>
-    <div class="result" id="r9"></div>
-  </div>
-
-  <div class="question" id="q10" style="display:none;">
-    <p>問題 10：有人說你欠錢並威脅你，你？</p>
-    <button onclick="checkAnswer(10, false)">慌張付款</button>
-    <button onclick="checkAnswer(10, true)">報警並求助</button>
-    <div class="result" id="r10"></div>
-  </div>
-
-  <div id="finalResult"></div>
-  <button id="restartBtn" style="display:none;" onclick="restartQuiz()">重新開始測驗</button>
 
   <script>
     let currentQuestion = 1;
     let score = 0;
+    let username = "";
 
+    // 登入函式
+    function login() {
+      const input = document.getElementById("usernameInput");
+      const errorDiv = document.getElementById("loginError");
+      if(input.value.trim() === "") {
+        errorDiv.innerText = "請輸入名稱喔～";
+        return;
+      }
+      username = input.value.trim();
+      errorDiv.innerText = "";
+      document.getElementById("loginSection").style.display = "none";
+      document.getElementById("quizSection").style.display = "block";
+      document.getElementById("welcomeUser").innerText = `歡迎你，${username}！開始測驗吧～`;
+    }
+
+    // 檢查答案
     function checkAnswer(questionNumber, isCorrect) {
       const result = document.getElementById("r" + questionNumber);
       if (isCorrect) {
@@ -137,9 +284,9 @@
       const buttons = document.querySelectorAll(`#q${questionNumber} button`);
       buttons.forEach(btn => btn.disabled = true);
 
-      // 顯示下一題或結果
-      if (currentQuestion < 10) {
-        document.getElementById("q" + currentQuestion).style.display = "none";
+      // 顯示下一題
+      if(questionNumber < 10) {
+        document.getElementById("q" + questionNumber).style.display = "none";
         currentQuestion++;
         document.getElementById("q" + currentQuestion).style.display = "block";
       } else {
@@ -147,24 +294,42 @@
       }
     }
 
+    // 顯示最後成績
     function showFinalResult() {
-      document.getElementById("finalResult").innerText = "測驗結束！你的總分是：" + score + " 分 / 100 分";
-      document.getElementById("finalResult").style.color = "#d63384";
+      document.getElementById("finalResult").innerText = `${username}，你的得分是 ${score} 分！`;
       document.getElementById("restartBtn").style.display = "inline-block";
+      document.getElementById("logoutBtn").style.display = "inline-block";
     }
 
+    // 重新開始測驗
     function restartQuiz() {
+      // 重設分數與題目狀態
       score = 0;
       currentQuestion = 1;
-      document.getElementById("finalResult").innerText = "";
-      document.getElementById("restartBtn").style.display = "none";
+      for(let i = 1; i <= 10; i++) {
+        document.getElementById("r" + i).innerText = "";
+        document.getElementById("q" + i).style.display = i === 1 ? "block" : "none";
 
-      for(let i=1; i<=10; i++) {
-        document.getElementById("q"+i).style.display = (i === 1) ? "block" : "none";
-        document.getElementById("r"+i).innerText = "";
+        // 重新啟用按鈕
         const buttons = document.querySelectorAll(`#q${i} button`);
         buttons.forEach(btn => btn.disabled = false);
       }
+      document.getElementById("finalResult").innerText = "";
+      document.getElementById("restartBtn").style.display = "none";
+      document.getElementById("logoutBtn").style.display = "none";
+    }
+
+    // 登出
+    function logout() {
+      // 清空資料並回到登入畫面
+      username = "";
+      score = 0;
+      currentQuestion = 1;
+      document.getElementById("usernameInput").value = "";
+      document.getElementById("loginError").innerText = "";
+      document.getElementById("loginSection").style.display = "block";
+      document.getElementById("quizSection").style.display = "none";
+      restartQuiz();
     }
   </script>
 </body>
